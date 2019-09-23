@@ -1,6 +1,6 @@
 # DumpTruckSim
 
-Dump truck simulator using Simulink
+Dump Truck Simulator using Simulink
 ![Integrated Model Image](/misc/Screenshots/IntegratedModel.PNG?raw=true "Integrated Model")
 
 ## Description
