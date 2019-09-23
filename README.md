@@ -15,5 +15,11 @@ DumpTruckSim is based on Matlab/Simulink R2018b.
 3. Run model/BicycleModel.slx
 4. Run scripts/AnalyseResult.m
 
+### Simple Speed and Steer Feedback Controller Simulation
+1. Run AddPaths.m
+2. Run scripts/SetParameter.m
+3. Run model/IntegratedModel.slx
+4. Run scripts/AnalyseResult.m
+
 ## Author
 [MasanoriOgihara](https://github.com/MasanoriOgihara)
