@@ -14,7 +14,7 @@ alpha_r_peak = atan2(3*mu*m*g*a, Car * L);
 plot(x_stab,y_stab,'color',parallel_color);
 
 grid on;
-xlabel('Beta [rad]');
+xlabel('Slip Angle [rad]');
 ylabel('Yawrate [rad/s]');
 title('Stability Envelope')
 end
