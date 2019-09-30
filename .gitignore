@@ -1,5 +1,8 @@
 # ignore slprj/
 slprj/
 
+# ignore ignore/
+ignore/
+
 # ignore file types
 *.slxc
