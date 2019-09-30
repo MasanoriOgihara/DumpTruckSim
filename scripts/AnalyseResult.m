@@ -44,6 +44,13 @@ else
 end
     
 
+if(exist('steering')==1) % if 'steering' exists as a variable name
+    existsSteerFlag = true;
+    delta_des_rad = steering.delta_des_rad.Data;
+    delta_rad = steering.delta_rad.Data;
+else
+    existsSteerFlag = false;
+end
 % generic value
 nSamples = size(t,1);
 
@@ -61,6 +68,9 @@ tab4 = uitab(tabgp,'Title','Rear Tire');
 tab5 = uitab(tabgp,'Title','Yawrate-SlipAngle');
 if(existsControllerFlag)
     tab6 = uitab(tabgp,'Title','Controller');
+end
+if(existsSteerFlag)
+    tab7 = uitab(tabgp,'Title','Steering');
 end
 
 % tab 1: position
@@ -96,35 +106,52 @@ legend({'r','psi'});
 
 % tab3: Front Tire
 axes('parent', tab3);
-subplot(221);
+subplot(231);
 plot(t,alpha_f);
 ylabel('alpha-f(rad)')
-subplot(222);
+subplot(232);
 plot(t,Fyf);
 ylabel('Fyf(N)')
-subplot(223);
+subplot(233);
 plot(alpha_f,Fyf);
-xlabel('alpha_f(rad)')
+xlabel('alpha-f(rad)')
 ylabel('Fyf(N)')
-subplot(224);
+subplot(234);
 plot(t,saturated_f);
+ylim([0,2]);
 ylabel('saturated-front(-)')
+subplot(235);
+muFzf_N = vehicle.m*env.g*env.mu*vehicle.b/vehicle.L;
+theta = 0:pi/12:2*pi;
+plot(Fyf,Fxf);
+hold all;
+plot(muFzf_N * cos(theta),muFzf_N * sin(theta),'color',[0.5 0.5 0.5]);
+xlabel('Fyf(N)');
+ylabel('Fxf(N)');
 
 % tab4: Rear Tire
 axes('parent', tab4);
-subplot(221);
+subplot(231);
 plot(t,alpha_r);
 ylabel('alpha-r(rad)')
-subplot(222);
+subplot(232);
 plot(t,Fyr);
 ylabel('Fyr(N)')
-subplot(223);
+subplot(233);
 plot(alpha_r,Fyr);
-xlabel('alpha_r(rad)')
+xlabel('alpha-r(rad)')
 ylabel('Fyr(N)')
-subplot(224);
+subplot(234);
 plot(t,saturated_r);
+ylim([0,2])
 ylabel('saturated-rear(-)')
+subplot(235);
+muFzr_N = vehicle.m*env.g*env.mu*vehicle.a/vehicle.L;
+plot(Fyr,Fxr);
+hold all;
+plot(muFzr_N * cos(theta),muFzr_N * sin(theta),'color',[0.5 0.5 0.5]);
+xlabel('Fyr(N)');
+ylabel('Fxr(N)');
 
 % tab5: Yawrate-SlipAngle
 axes('parent', tab5);
@@ -158,5 +185,16 @@ ylabel('Control Error');
 subplot(224);
 plot(t_cont,delta_fb_rad);
 legend({'FB'});
+ylabel('delta (rad)')
+end
+
+% tab7: Steer
+if(existsSteerFlag)
+axes('parent', tab7);
+%subplot(221);
+plot(t,delta_rad);
+hold all;
+plot(t_cont,delta_fb_rad);
+legend({'delta','FB'});
 ylabel('delta (rad)')
 end
