@@ -36,6 +36,8 @@ if(exist('controller')==1) % if 'controller' exists as a variable name
     e = controller.e.Data;
     dPsi = controller.dPsi.Data;
     UxDes = controller.UxDes.Data;
+    delta_cmd_rad = controller.delta_cmd_rad.Data;
+    delta_ffw_rad = controller.delta_ffw_rad.Data;
     delta_fb_rad = controller.delta_fb_rad.Data;
     Fx_cmd_N = controller.Fx_cmd_N.Data;
     grade_rad = controller.grade_rad.Data;    
@@ -183,8 +185,11 @@ legend({'e(m)','dPsi(rad)'});
 ylabel('Control Error');
 
 subplot(224);
+plot(t_cont,delta_cmd_rad);
+hold all;
+plot(t_cont,delta_ffw_rad);
 plot(t_cont,delta_fb_rad);
-legend({'FB'});
+legend({'Command','FFW','FB'});
 ylabel('delta (rad)')
 end
 

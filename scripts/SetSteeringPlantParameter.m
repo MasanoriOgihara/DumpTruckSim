@@ -26,5 +26,7 @@ steer.Nt=10000;
 steer.Cd=0.61;
 steer.Ro=800;    
 
+steer.deltaRateMax_radps = 10/180*pi; % Slew rate (rad/s)
+
 stcont.MAX_STEERING_RAD = 0.593;% (34deg) %  0.533;% (30.5deg)
 stcont.IGNORE_ANGLE_RAD = 0.000175; % 0.1 deg.
