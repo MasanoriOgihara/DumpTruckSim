@@ -23,7 +23,7 @@ DumpTruckSim is based on Matlab/Simulink R2018b.
 4. Run scripts/AnalyseResult.m
 
 ## Known issue
-- Integrated Model.slx : Simulator doesn't work if sim.Ux0 (initial speed) is larger than 5 m/s (e.g. 10 m/s).
+- ~~Integrated Model.slx : Simulator doesn't work if sim.Ux0 (initial speed) is larger than 5 m/s (e.g. 10 m/s).~~ --> Resolved.
 
 ## Author
 [MasanoriOgihara](https://github.com/MasanoriOgihara)
