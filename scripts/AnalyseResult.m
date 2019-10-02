@@ -32,10 +32,10 @@ if(exist('controller')==1) % if 'controller' exists as a variable name
     existsControllerFlag = true;
     t_cont = controller.index.Time;
     index = controller.index.Data;
-    s = controller.s.Data;
-    e = controller.e.Data;
-    dPsi = controller.dPsi.Data;
-    UxDes = controller.UxDes.Data;
+    s = controller.s_m.Data;
+    e = controller.e_m.Data;
+    dPsi = controller.dPsi_rad.Data;
+    UxDes = controller.UxDes_mps.Data;
     delta_cmd_rad = controller.delta_cmd_rad.Data;
     delta_ffw_rad = controller.delta_ffw_rad.Data;
     delta_fb_rad = controller.delta_fb_rad.Data;
@@ -50,6 +50,7 @@ if(exist('steering')==1) % if 'steering' exists as a variable name
     existsSteerFlag = true;
     delta_des_rad = steering.delta_des_rad.Data;
     delta_rad = steering.delta_rad.Data;
+    slewrate_radps = [0;diff(delta_rad)]/sim.timestep_s;
 else
     existsSteerFlag = false;
 end
@@ -70,16 +71,16 @@ tab4 = uitab(tabgp,'Title','Rear Tire');
 tab5 = uitab(tabgp,'Title','Yawrate-SlipAngle');
 if(existsControllerFlag)
     tab6 = uitab(tabgp,'Title','Controller');
+    tab7 = uitab(tabgp,'Title','Index');
 end
 if(existsSteerFlag)
-    tab7 = uitab(tabgp,'Title','Steering');
+    tab8 = uitab(tabgp,'Title','Steering');
 end
 
 % tab 1: position
 axes('parent',tab1);
 plot(E,N);
 axis equal;
-% text(sim.E0,sim.N0,'s');
 hold all;
 plot(world.posE_m,world.posN_m,'r');
 for i = 1:pltItvl:nSamples
@@ -167,39 +168,67 @@ ylabel('yawrate(rad/s)')
 % tab6: Controller
 if(existsControllerFlag)
 axes('parent', tab6);
-subplot(221);
+ax(1) = subplot(221);
 plot(t,Ux);
 hold all;
 plot(t_cont,UxDes);
 legend({'Ux','UxDes'});
 ylabel('Speed (m/s)');
-subplot(222);
+
+ax(2) = subplot(222);
 plot(t_cont,Fx_cmd_N);
 ylabel('Fx Command(N)');
 
-subplot(223);
-plot(s,e);
-hold all;
-plot(s,dPsi);
-legend({'e(m)','dPsi(rad)'});
-ylabel('Control Error');
+ax(3) = subplot(223);
+yyaxis left;
+plot(t_cont,e);
+ylim([-3 3]);
+ylabel('Lateral Error (m)');
+yyaxis right;
+plot(t_cont,dPsi);
+ylim([-1 1]);
+ylabel('Heading Error (rad)');
 
-subplot(224);
+ax(4) = subplot(224);
 plot(t_cont,delta_cmd_rad);
 hold all;
 plot(t_cont,delta_ffw_rad);
 plot(t_cont,delta_fb_rad);
 legend({'Command','FFW','FB'});
 ylabel('delta (rad)')
+
+linkaxes(ax,'x');
+
+% tab7: Indexing
+axes('parent', tab7);
+ax(1) = subplot(211);
+plot(t_cont,s);
+hold on;
+plot(t_cont,world.s_m(index));
+legend('actual s-m','index s-m');
+ylabel('s-m');
+
+ax(2) = subplot(212);
+plot(t_cont,index);
+ylabel('index');
 end
 
-% tab7: Steer
+% tab8: Steer
 if(existsSteerFlag)
-axes('parent', tab7);
-%subplot(221);
+axes('parent', tab8);
+subplot(211);
 plot(t,delta_rad);
 hold all;
-plot(t_cont,delta_fb_rad);
-legend({'delta','FB'});
+plot(t,delta_des_rad);
+legend({'delta-actual','delta-desired'});
 ylabel('delta (rad)')
+
+subplot(212);
+plot(t,slewrate_radps);
+hold all;
+plot([0,t(end)],[steer.deltaRateMax_radps, steer.deltaRateMax_radps],'color',[0.5 0.5 0.5]);
+plot([0,t(end)],-[steer.deltaRateMax_radps, steer.deltaRateMax_radps],'color',[0.5 0.5 0.5]);
+legend({'delta-actual'});
+ylabel('Slew Rate (rad/s)')
+
 end
